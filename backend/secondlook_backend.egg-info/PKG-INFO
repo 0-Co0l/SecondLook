@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: secondlook-backend
+Version: 0.1.0
+Summary: Tax return review backend
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: alembic>=1.14.0
+Requires-Dist: anthropic>=0.37.1
+Requires-Dist: boto3>=1.35.0
+Requires-Dist: cryptography>=43.0.1
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: pillow>=10.4.0
+Requires-Dist: pydantic-settings>=2.5.2
+Requires-Dist: pymupdf>=1.24.10
+Requires-Dist: python-multipart>=0.0.10
+Requires-Dist: sqlmodel>=0.0.22
+Requires-Dist: uvicorn[standard]>=0.31.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.3; extra == "dev"
+Requires-Dist: httpx>=0.27.2; extra == "dev"
+
+# Backend
+
+FastAPI service for the SecondLook tax return review workflow.

@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.app-shell {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.disclaimer {
+  color: #7c2d12;
+}
+
+section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.stack {
+  display: grid;
+  gap: 0.8rem;
+}
+
+label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+img {
+  max-width: 100%;
+  border: 1px solid #d1d5db;
+}
+
+pre {
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 6px;
+  padding: 0.8rem;
+  overflow: auto;
+}

@@ -1,0 +1,25 @@
+{
+  "version": "2025@2026-02-10",
+  "sources": [
+    {
+      "name": "IRS 2025 draft thresholds",
+      "verified_at": "2026-02-10"
+    }
+  ],
+  "standard_deduction": {
+    "single": 14600,
+    "married_filing_jointly": 29200,
+    "married_filing_separately": 14600,
+    "head_of_household": 21900
+  },
+  "child_dependent_care": {
+    "max_expense_one_qualifying_person": 3000,
+    "max_expense_two_or_more_qualifying_people": 6000
+  },
+  "education_credit": {
+    "aotc_max": 2500
+  },
+  "retirement_savers_credit": {
+    "max_credit": 2000
+  }
+}
