@@ -19,30 +19,33 @@ export function ReportPage() {
   }, [jobId]);
 
   return (
-    <section>
+    <section className="report-card">
       <h2>Report</h2>
-      <p className="disclaimer">
+      <p className="report-intro">
+        Structured findings from the redacted return are shown below, with downloadable formats for sharing.
+      </p>
+      <p className="disclaimer report-disclaimer">
         Educational review aid only — not tax advice. Confirm with a qualified professional.
       </p>
-      {error && <p>{error}</p>}
-      {!error && !report && <p>Loading...</p>}
+      {error && <p className="status-banner">{error}</p>}
+      {!error && !report && <p className="status-banner">Loading report...</p>}
       {report && (
         <>
-          <p>
+          <p className="download-row">
             Downloads:
             {" "}
-            <a href={`/api/jobs/${jobId}/report.html`} target="_blank" rel="noreferrer">
+            <a className="download-link" href={`/api/jobs/${jobId}/report.html`} target="_blank" rel="noreferrer">
               HTML
             </a>
             {" | "}
-            <a href={`/api/jobs/${jobId}/report.md`} target="_blank" rel="noreferrer">
+            <a className="download-link" href={`/api/jobs/${jobId}/report.md`} target="_blank" rel="noreferrer">
               Markdown
             </a>
           </p>
-          <pre>{JSON.stringify(report, null, 2)}</pre>
+          <pre className="report-json">{JSON.stringify(report, null, 2)}</pre>
         </>
       )}
-      <p>
+      <p className="back-link-row">
         <Link to="/history">Back to history</Link>
       </p>
     </section>

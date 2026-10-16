@@ -31,6 +31,13 @@ const defaultQuestionnaire: Questionnaire = {
   has_home_office: "unknown"
 };
 
+function formatQuestionKey(key: string): string {
+  return key
+    .split("_")
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+}
+
 export function UploadPage() {
   const navigate = useNavigate();
   const [consent, setConsent] = useState(false);
@@ -108,14 +115,36 @@ export function UploadPage() {
   }
 
   return (
-    <section>
+    <section className="landing-card">
       <h2>Upload a federal return PDF</h2>
       <p>
-        We redact sensitive PII before any LLM review. You must confirm redactions before analysis starts. Data is
-        retained for a short period and can be deleted immediately.
+        Secure-first workflow: we redact sensitive PII before any model review, require your confirmation, then provide
+        a conservative educational summary with next-step guidance.
       </p>
-      <form onSubmit={handleUpload} className="stack">
-        <label>
+
+      <div className="pill-row">
+        <span className="pill">PII redaction before AI</span>
+        <span className="pill">User confirmation gate</span>
+        <span className="pill">24-hour default retention target</span>
+      </div>
+
+      <div className="steps-grid">
+        <article>
+          <h3>1) Upload</h3>
+          <p>Submit one federal return PDF (up to 25 MB and 100 pages).</p>
+        </article>
+        <article>
+          <h3>2) Review redactions</h3>
+          <p>Preview what was removed and approve before analysis starts.</p>
+        </article>
+        <article>
+          <h3>3) Get findings</h3>
+          <p>Review likely missed items, questions, and possible errors.</p>
+        </article>
+      </div>
+
+      <form onSubmit={handleUpload} className="stack form-panel">
+        <label className="checkbox-row">
           <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} /> I consent to
           redaction and AI-assisted educational review.
         </label>
@@ -131,7 +160,7 @@ export function UploadPage() {
           <legend>Optional questionnaire</legend>
           {(Object.keys(defaultQuestionnaire) as Array<keyof Questionnaire>).map((key) => (
             <label key={key}>
-              {key}
+              {formatQuestionKey(key)}
               <select
                 value={questionnaire[key]}
                 onChange={(e) => setQuestionnaire((prev) => ({ ...prev, [key]: e.target.value }))}
@@ -149,17 +178,19 @@ export function UploadPage() {
           Upload
         </button>
       </form>
-      {status && <p>{status}</p>}
+      {status && <p className="status-banner">{status}</p>}
 
       {jobId && redactionLog.length > 0 && (
-        <section>
+        <section className="preview-panel">
           <h3>Redaction preview</h3>
-          <p>
-            Original: <img src={`/api/jobs/${jobId}/pages/0?redacted=false`} alt="Original page 1" />
-          </p>
-          <p>
-            Redacted: <img src={`/api/jobs/${jobId}/pages/0?redacted=true`} alt="Redacted page 1" />
-          </p>
+          <div className="preview-grid">
+            <p>
+              Original: <img src={`/api/jobs/${jobId}/pages/0?redacted=false`} alt="Original page 1" />
+            </p>
+            <p>
+              Redacted: <img src={`/api/jobs/${jobId}/pages/0?redacted=true`} alt="Redacted page 1" />
+            </p>
+          </div>
           <h4>Redaction log</h4>
           <pre>{JSON.stringify(redactionLog, null, 2)}</pre>
           <button onClick={startReview} disabled={loading}>

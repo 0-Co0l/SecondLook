@@ -1,31 +1,125 @@
 body {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #f9fafb;
-  color: #111827;
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  background: radial-gradient(140% 100% at 0% 0%, #ecfeff 0%, #f8fafc 45%, #f8fafc 100%);
+  color: #0f172a;
 }
 
 .app-shell {
-  max-width: 1000px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.25rem;
 }
 
-header nav {
+.site-header {
+  background: linear-gradient(150deg, #0f766e 0%, #0f3f6f 70%);
+  color: #f0fdfa;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 26px rgba(15, 118, 110, 0.2);
+}
+
+.site-header h1 {
+  margin: 0.25rem 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #a7f3d0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.86rem;
+}
+
+.site-nav {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.85rem;
+}
+
+.site-nav a {
+  color: #e0f2fe;
+  text-decoration: none;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 242, 254, 0.22);
+}
+
+.site-nav a:hover {
+  background: rgba(224, 242, 254, 0.1);
 }
 
 .disclaimer {
-  color: #7c2d12;
+  color: #fed7aa;
+  margin: 0;
 }
 
 section {
   background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
   padding: 1rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+.landing-card h2 {
+  margin-top: 0;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.9rem 0 1rem;
+}
+
+.pill {
+  font-size: 0.8rem;
+  background: #eff6ff;
+  color: #1e3a8a;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+}
+
+.steps-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.steps-grid article {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.7rem;
+}
+
+.steps-grid h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.steps-grid p {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+.form-panel {
+  margin-top: 1rem;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.8rem;
+}
+
+.status-banner {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
 }
 
 .stack {
@@ -38,9 +132,135 @@ label {
   gap: 0.3rem;
 }
 
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.checkbox-row input[type="checkbox"] {
+  margin: 0;
+}
+
+input[type="number"],
+input[type="file"],
+select {
+  border: 1px solid #94a3b8;
+  border-radius: 8px;
+  padding: 0.5rem 0.55rem;
+  background: white;
+}
+
+button {
+  width: fit-content;
+  background: #0f766e;
+  color: white;
+  border: 1px solid #115e59;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0d9488;
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.preview-panel {
+  margin-top: 1rem;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.history-card h2,
+.report-card h2 {
+  margin-top: 0;
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 0.7rem;
+}
+
+.history-id {
+  margin: 0;
+  font-family: ui-monospace, Menlo, Monaco, "Courier New", monospace;
+  font-size: 0.82rem;
+  color: #334155;
+}
+
+.history-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+}
+
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.history-actions a,
+.download-link,
+.back-link-row a {
+  color: #0f3f6f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.history-actions a:hover,
+.download-link:hover,
+.back-link-row a:hover {
+  text-decoration: underline;
+}
+
+.report-intro {
+  margin-top: 0.2rem;
+}
+
+.report-disclaimer {
+  color: #9a3412;
+}
+
+.download-row {
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.report-json {
+  border: 1px solid #1e293b;
+}
+
+.back-link-row {
+  margin-bottom: 0;
+}
+
 img {
   max-width: 100%;
   border: 1px solid #d1d5db;
+  border-radius: 8px;
 }
 
 pre {
