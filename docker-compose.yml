@@ -1,18 +1,37 @@
+# Profile A (§4.4): one machine, SQLite + local files on ./data, Caddy for HTTPS.
+# Before the first start: `mkdir -p data && sudo chown 10001 data` (the app runs as uid 10001).
 services:
   app:
+    image: ${APP_IMAGE:-secondlook:latest}
     build: .
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    environment:
+      # Reachable only from Caddy on the Compose network; no port is published to the host.
+      APP_HOST: 0.0.0.0
+      DATA_DIR: /app/data
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data/app.db}
+      # The app port is not published, so only Caddy can send X-Forwarded-For.
+      FORWARDED_ALLOW_IPS: "*"
+    expose:
+      - "8000"
     volumes:
       - ./data:/app/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
 
   caddy:
     image: caddy:2
     depends_on:
       - app
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env, e.g. review.example.com}
     ports:
       - "80:80"
       - "443:443"

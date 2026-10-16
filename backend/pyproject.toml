@@ -6,22 +6,30 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "alembic>=1.14.0",
-  "anthropic>=0.37.1",
+  "anthropic>=1.15.0",
   "boto3>=1.35.0",
   "cryptography>=43.0.1",
   "fastapi>=0.115.0",
+  "pdfplumber>=0.11.4",
   "pillow>=10.4.0",
+  "presidio-analyzer>=2.2.355",
+  "psycopg[binary]>=3.2.3",
   "pydantic-settings>=2.5.2",
-  "pymupdf>=1.24.10",
+  "pypdfium2>=4.30.0",
+  "pytesseract>=0.3.13",
   "python-multipart>=0.0.10",
+  "spacy>=3.7.5",
   "sqlmodel>=0.0.22",
   "uvicorn[standard]>=0.31.0",
 ]
 
 [project.optional-dependencies]
+# AGPL-3.0 or commercial (see LICENSING.md). Leave out of the image for Path C (PDF_BACKEND=permissive).
+pymupdf = ["pymupdf>=1.24.10"]
 dev = [
-  "pytest>=8.3.3",
   "httpx>=0.27.2",
+  "pymupdf>=1.24.10",  # the leak test extracts text with PyMuPDF regardless of the backend under test (§11)
+  "pytest>=8.3.3",
 ]
 
 [build-system]
@@ -34,3 +42,5 @@ packages = ["app"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+markers = ["slow: runs the full synthetic corpus through OCR and Presidio"]
+filterwarnings = ["ignore::DeprecationWarning:spacy.*", "ignore::DeprecationWarning:weasel.*"]

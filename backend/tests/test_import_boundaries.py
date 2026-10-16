@@ -1,15 +1,35 @@
+"""CI check (§4.8): only app/pdf.py may import PyMuPDF."""
+
+from __future__ import annotations
+
+import ast
 from pathlib import Path
-import re
+
+BACKEND = Path(__file__).resolve().parents[1]
+FORBIDDEN = {"fitz", "pymupdf"}
+
+
+def _imported_modules(path: Path) -> set[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    found: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            found.update(alias.name.split(".")[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            found.add(node.module.split(".")[0])
+        elif isinstance(node, ast.Call) and getattr(node.func, "attr", getattr(node.func, "id", "")) in {
+            "import_module",
+            "__import__",
+        }:
+            found.update(a.value.split(".")[0] for a in node.args if isinstance(a, ast.Constant) and isinstance(a.value, str))
+    return found
 
 
 def test_only_pdf_module_imports_pymupdf() -> None:
-    app_dir = Path(__file__).resolve().parents[1] / "app"
-    pattern = re.compile(r"^\s*(import fitz|from fitz import)", re.MULTILINE)
-    offenders: list[str] = []
-    for pyfile in app_dir.rglob("*.py"):
-        if pyfile.name == "pdf.py":
-            continue
-        text = pyfile.read_text(encoding="utf-8")
-        if pattern.search(text):
-            offenders.append(str(pyfile))
-    assert offenders == [], f"Unexpected PyMuPDF imports outside pdf.py: {offenders}"
+    offenders = [
+        str(path.relative_to(BACKEND))
+        for folder in ("app", "migrations")
+        for path in (BACKEND / folder).rglob("*.py")
+        if path.name != "pdf.py" and _imported_modules(path) & FORBIDDEN
+    ]
+    assert offenders == [], f"PyMuPDF imported outside app/pdf.py: {offenders}"

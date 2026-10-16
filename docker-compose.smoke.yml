@@ -1,0 +1,7 @@
+# CI smoke test only: the app on the host network, loopback-only, no Caddy.
+services:
+  app:
+    network_mode: host
+    environment:
+      APP_HOST: 127.0.0.1
+      FORWARDED_ALLOW_IPS: 127.0.0.1

@@ -1,25 +1,129 @@
 {
-  "version": "2025@2026-02-10",
-  "sources": [
-    {
-      "name": "IRS 2025 draft thresholds",
-      "verified_at": "2026-02-10"
+  "tax_year": 2025,
+  "version": "2025@unverified",
+  "review_status": "unverified",
+  "review_note": "Values drafted from memory of 2025 law (including the July 2025 OBBBA changes). Every entry needs a person to check it against the cited source, set verified_at, and then set review_status to 'verified' and version to '2025@<date>' (§6.2).",
+  "rules": {
+    "standard_deduction": {
+      "values": {
+        "single": 15750,
+        "married_filing_jointly": 31500,
+        "married_filing_separately": 15750,
+        "head_of_household": 23625,
+        "qualifying_surviving_spouse": 31500
+      },
+      "additional_65_or_blind": {"single_or_head_of_household": 2000, "married": 1600},
+      "source": "IRS Form 1040 instructions (2025), Standard Deduction Chart; Rev. Proc. 2024-40 as amended by Pub. L. 119-21",
+      "verified_at": null
+    },
+    "senior_deduction": {
+      "per_qualifying_person": 6000,
+      "minimum_age": 65,
+      "phaseout_rate": 0.06,
+      "phaseout_start_magi": {"joint": 150000, "other": 75000},
+      "source": "Pub. L. 119-21 §70103; Schedule 1-A (Form 1040) instructions (2025)",
+      "verified_at": null
+    },
+    "child_tax_credit": {
+      "per_qualifying_child": 2200,
+      "max_refundable_per_child": 1700,
+      "credit_for_other_dependents": 500,
+      "qualifying_child_max_age": 16,
+      "phaseout_start_agi": {"married_filing_jointly": 400000, "other": 200000},
+      "phaseout_per_1000_over": 50,
+      "source": "Schedule 8812 (Form 1040) instructions (2025); Pub. L. 119-21 §70104",
+      "verified_at": null
+    },
+    "child_dependent_care": {
+      "max_expense_one_qualifying_person": 3000,
+      "max_expense_two_or_more_qualifying_people": 6000,
+      "credit_rate_max": 0.35,
+      "credit_rate_min": 0.2,
+      "rate_reduction_starts_agi": 15000,
+      "min_rate_agi": 43000,
+      "qualifying_child_max_age": 12,
+      "source": "Form 2441 instructions (2025); IRS Publication 503",
+      "verified_at": null
+    },
+    "education_credits": {
+      "aotc_max_per_student": 2500,
+      "aotc_refundable_share": 0.4,
+      "aotc_phaseout_magi": {"single": [80000, 90000], "married_filing_jointly": [160000, 180000]},
+      "llc_max_per_return": 2000,
+      "source": "Form 8863 instructions (2025); IRS Publication 970",
+      "verified_at": null
+    },
+    "retirement_savers_credit": {
+      "max_contribution_per_person": 2000,
+      "max_credit_per_person": 1000,
+      "credit_rates": [0.5, 0.2, 0.1],
+      "agi_limit": {"married_filing_jointly": 79000, "head_of_household": 59250, "other": 39500},
+      "source": "Form 8880 instructions (2025); IRS Notice 2024-80",
+      "verified_at": null
+    },
+    "earned_income_credit": {
+      "max_credit_by_children": {"0": 649, "1": 4328, "2": 7152, "3": 8046},
+      "investment_income_limit": 11950,
+      "source": "Form 1040 instructions (2025), EIC Table; Rev. Proc. 2024-40",
+      "verified_at": null
+    },
+    "ira_deduction": {
+      "contribution_limit": 7000,
+      "catch_up_age_50": 1000,
+      "source": "IRS Publication 590-A (2025); IRS Notice 2024-80",
+      "verified_at": null
+    },
+    "hsa_deduction": {
+      "self_only_limit": 4300,
+      "family_limit": 8550,
+      "catch_up_age_55": 1000,
+      "source": "Form 8889 instructions (2025); Rev. Proc. 2024-25",
+      "verified_at": null
+    },
+    "student_loan_interest": {
+      "max_deduction": 2500,
+      "phaseout_magi": {"single": [85000, 100000], "married_filing_jointly": [170000, 200000]},
+      "source": "Schedule 1 (Form 1040) instructions (2025), line 21; IRS Publication 970",
+      "verified_at": null
+    },
+    "educator_expenses": {
+      "max_per_educator": 300,
+      "source": "Schedule 1 (Form 1040) instructions (2025), line 11",
+      "verified_at": null
+    },
+    "salt_deduction_cap": {
+      "cap": 40000,
+      "cap_married_filing_separately": 20000,
+      "phasedown_start_magi": 500000,
+      "floor": 10000,
+      "source": "Schedule A (Form 1040) instructions (2025); Pub. L. 119-21 §70120",
+      "verified_at": null
+    },
+    "energy_efficient_home_improvement": {
+      "credit_rate": 0.3,
+      "annual_cap": 3200,
+      "note": "Not available for property placed in service after Dec 31, 2025.",
+      "source": "Form 5695 instructions (2025), Part II",
+      "verified_at": null
+    },
+    "residential_clean_energy": {
+      "credit_rate": 0.3,
+      "note": "Not available for expenditures made after Dec 31, 2025.",
+      "source": "Form 5695 instructions (2025), Part I",
+      "verified_at": null
+    },
+    "clean_vehicle_credit": {
+      "new_vehicle_max": 7500,
+      "used_vehicle_max": 4000,
+      "note": "Not available for vehicles acquired after Sept 30, 2025.",
+      "source": "Form 8936 instructions (2025); Pub. L. 119-21 §70502",
+      "verified_at": null
+    },
+    "amended_return_deadline": {
+      "years_from_filing": 3,
+      "years_from_payment": 2,
+      "source": "IRS Topic No. 308, Amended returns",
+      "verified_at": null
     }
-  ],
-  "standard_deduction": {
-    "single": 14600,
-    "married_filing_jointly": 29200,
-    "married_filing_separately": 14600,
-    "head_of_household": 21900
-  },
-  "child_dependent_care": {
-    "max_expense_one_qualifying_person": 3000,
-    "max_expense_two_or_more_qualifying_people": 6000
-  },
-  "education_credit": {
-    "aotc_max": 2500
-  },
-  "retirement_savers_credit": {
-    "max_credit": 2000
   }
 }

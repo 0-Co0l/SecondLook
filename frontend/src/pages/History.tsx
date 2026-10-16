@@ -1,18 +1,36 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Job, deleteJob, listJobs } from "../api";
+import { api, ApiError, Job } from "../api";
+import { errorMessage, formatDate, STATUS_LABELS } from "../lib";
+
+function jobLink(job: Job): { to: string; label: string } | null {
+  if (job.status === "done") return { to: `/jobs/${job.id}/report`, label: "Open report" };
+  if (job.status === "awaiting_confirmation") return { to: `/jobs/${job.id}/preview`, label: "Check redactions" };
+  if (job.status === "redacting" || job.status === "reviewing") return { to: `/jobs/${job.id}/preview`, label: "View progress" };
+  return null;
+}
 
 export function HistoryPage() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [error, setError] = useState<string>("");
+  const [jobs, setJobs] = useState<Job[] | null>(null);
+  const [error, setError] = useState("");
 
   async function refresh() {
     try {
-      setJobs(await listJobs());
+      setJobs(await api.listJobs());
       setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load history");
+      setError(errorMessage(err instanceof ApiError ? err.code : undefined));
+    }
+  }
+
+  async function remove(job: Job) {
+    if (!window.confirm(`Delete the ${job.tax_year} review and all of its files now? This can't be undone.`)) return;
+    try {
+      await api.deleteJob(job.id);
+      await refresh();
+    } catch (err) {
+      setError(errorMessage(err instanceof ApiError ? err.code : undefined));
     }
   }
 
@@ -22,32 +40,37 @@ export function HistoryPage() {
 
   return (
     <section className="history-card">
-      <h2>History</h2>
-      <p>Review prior jobs, open completed reports, and remove records immediately when needed.</p>
-      {error && <p className="status-banner">{error}</p>}
-      <button onClick={() => void refresh()}>Refresh history</button>
+      <h2>Your reviews</h2>
+      <p>Reviews delete themselves automatically when they expire. You can also delete one right away.</p>
+      {error && <p className="status-banner error">{error}</p>}
+      {jobs && jobs.length === 0 && (
+        <p>
+          No reviews yet. <Link to="/">Start one</Link>.
+        </p>
+      )}
       <ul className="history-list">
-        {jobs.map((job) => (
-          <li key={job.id} className="history-item">
-            <div>
-              <p className="history-id">{job.id}</p>
-              <p className="history-meta">
-                Tax year: <strong>{job.tax_year}</strong> · Status: <strong>{job.status}</strong>
-              </p>
-            </div>
-            <div className="history-actions">
-              {job.status === "done" && <Link to={`/report/${job.id}`}>Open report</Link>}
-              <button
-                onClick={async () => {
-                  await deleteJob(job.id);
-                  await refresh();
-                }}
-              >
-                Delete now
-              </button>
-            </div>
-          </li>
-        ))}
+        {(jobs ?? []).map((job) => {
+          const link = jobLink(job);
+          return (
+            <li key={job.id} className="history-item">
+              <div>
+                <p className="history-title">
+                  {job.tax_year} return · <span className={`status status-${job.status}`}>{STATUS_LABELS[job.status]}</span>
+                </p>
+                <p className="history-meta">
+                  Uploaded {formatDate(job.created_at)} · Deletes {formatDate(job.expires_at)}
+                  {job.status === "failed" && <> · {errorMessage(job.error_code)}</>}
+                </p>
+              </div>
+              <div className="history-actions">
+                {link && <Link to={link.to}>{link.label}</Link>}
+                <button type="button" className="danger" onClick={() => void remove(job)}>
+                  Delete now
+                </button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

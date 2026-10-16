@@ -8,7 +8,7 @@ from typing import Iterable
 import boto3
 from cryptography.fernet import Fernet
 
-from .settings import StorageBackendName, settings
+from .settings import Settings, StorageBackendName
 
 
 class StorageBackend(ABC):
@@ -55,7 +55,10 @@ class LocalStorage(StorageBackend):
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, key: str) -> Path:
-        return self.base_dir / key
+        path = (self.base_dir / key).resolve()
+        if not path.is_relative_to(self.base_dir.resolve()):
+            raise ValueError("storage key escapes the storage root")
+        return path
 
     def put(self, key: str, data: bytes) -> None:
         path = self._path(key)
@@ -63,7 +66,10 @@ class LocalStorage(StorageBackend):
         path.write_bytes(data)
 
     def get(self, key: str) -> bytes:
-        return self._path(key).read_bytes()
+        path = self._path(key)
+        if not path.is_file():
+            raise FileNotFoundError(key)
+        return path.read_bytes()
 
     def delete(self, key: str) -> None:
         path = self._path(key)
@@ -85,7 +91,9 @@ class LocalStorage(StorageBackend):
         root = self._path(prefix)
         if not root.exists():
             return []
-        threshold = older_than.replace(tzinfo=UTC).timestamp()
+        if older_than.tzinfo is None:
+            older_than = older_than.replace(tzinfo=UTC)
+        threshold = older_than.timestamp()
         keys: list[str] = []
         for file in root.rglob("*"):
             if file.is_file() and file.stat().st_mtime < threshold:
@@ -94,7 +102,7 @@ class LocalStorage(StorageBackend):
 
 
 class S3Storage(StorageBackend):
-    def __init__(self) -> None:
+    def __init__(self, settings: Settings) -> None:
         self.bucket = settings.s3_bucket
         self.client = boto3.client(
             "s3",
@@ -108,7 +116,10 @@ class S3Storage(StorageBackend):
         self.client.put_object(Bucket=self.bucket, Key=key, Body=data)
 
     def get(self, key: str) -> bytes:
-        response = self.client.get_object(Bucket=self.bucket, Key=key)
+        try:
+            response = self.client.get_object(Bucket=self.bucket, Key=key)
+        except self.client.exceptions.NoSuchKey as exc:
+            raise FileNotFoundError(key) from exc
         return response["Body"].read()
 
     def delete(self, key: str) -> None:
@@ -133,9 +144,9 @@ class S3Storage(StorageBackend):
                     yield item["Key"]
 
 
-def build_storage() -> EncryptedStorage:
+def build_storage(settings: Settings) -> EncryptedStorage:
     if settings.storage_backend == StorageBackendName.S3:
-        backend: StorageBackend = S3Storage()
+        backend: StorageBackend = S3Storage(settings)
     else:
-        backend = LocalStorage(settings.data_dir / "storage")
+        backend = LocalStorage(settings.storage_dir)
     return EncryptedStorage(backend, settings.file_encryption_key)

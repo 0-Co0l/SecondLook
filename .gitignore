@@ -10,3 +10,7 @@ node_modules/
 frontend/dist/
 backend/.coverage
 backend/htmlcov/
+*.egg-info/
+*.tsbuildinfo
+backend/data/
+.ruff_cache/
